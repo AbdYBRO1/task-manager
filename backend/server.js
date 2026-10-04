@@ -16,28 +16,6 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, 'uploads');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const decodedName = Buffer.from(file.originalname, 'latin1').toString('utf8');
-
-        const safeName = decodedName.replace(/\s+/g, '_');
-
-        const uniqueSuffix = Date.now();
-
-        cb(null, `${uniqueSuffix}-${safeName}`);
-    }
-});
-
-const upload = multer({ storage: storage });
-
-
 app.get('/api/tasks', async (req, res) => {
     try {
         const tasks = await prisma.task.findMany({

@@ -13,8 +13,13 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const upload = multer({ storage: multer.memoryStorage() });
 
 export async function uploadFileToSupabase(file) {
-    const fileExt = file.originalname.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+    const decodedName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+    const safeName = decodedName.replace(/\s+/g, '_');
+    const uniqueSuffix = Date.now();
+
+
+    const fileName = `${uniqueSuffix}-${safeName}`;
+
     const filePath = `uploads/${fileName}`;
 
     const { data, error } = await supabase.storage
