@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Routes, Route, Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { LogOut, Mail, Lock, Clock, RotateCcw, Play, Pause, FileText, User, Plus, FolderPlus, Layers } from 'lucide-react';
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://task-manager-9vuv.onrender.com/';
 
 
 export default function MainApp() {
