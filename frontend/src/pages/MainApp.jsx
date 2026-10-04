@@ -3,7 +3,6 @@ import { useNavigate, useLocation, Routes, Route, Navigate, Link } from 'react-r
 import axios from 'axios';
 import { LogOut, Mail, Lock, Clock, RotateCcw, Play, Pause, FileText, User, Plus, FolderPlus, Layers } from 'lucide-react';
 const API_URL = import.meta.env.API_URL;
-const BACKEND_URL = API_URL.replace('/api', '');
 
 
 export default function MainApp() {
