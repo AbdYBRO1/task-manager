@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Хэш пароля
+  role      Role     @default(USER) // USER или ADMIN
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile   Profile?
+  tasks     UserTask[] // Связь с задачами (отслеживание прогресса)
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Profile {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  username     String
+  points       Int      @default(0) // Баллы за задачи
+  totalTime    Int      @default(0) // Общее время таймера (в секундах)
+  avatarUrl    String?  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  tasks       Task[]
+  lessons     Lesson[]
+  createdAt   DateTime @default(now())
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  points      Int        @default(10) // Награда в баллах за выполнение
+  categoryId  String
+  category    Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  // Файлы (ссылка на сохраненный файл на сервере: pptx, xlsx, docx, txt, md, csv и т.д.)
+  fileUrl     String[]  
+  fileName    String[]
+  
+  createdAt   DateTime   @default(now())
+  users       UserTask[]
+}
+
+model UserTask {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  isCompleted Boolean  @default(false)
+  completedAt DateTime?
+
+  @@unique([userId, taskId])
+}
+
+model Lesson {
+  id          String    @id @default(uuid())
+  title       String
+  content     String    // Текст урока, может содержать Markdown/HTML
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  // Материалы к уроку (файлы)
+  fileUrl     String?
+  fileName    String?
+  
+  createdAt   DateTime  @default(now())
+}
