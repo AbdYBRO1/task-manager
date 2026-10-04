@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Routes, Route, Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { LogOut, Mail, Lock, Clock, RotateCcw, Play, Pause, FileText, User, Plus, FolderPlus, Layers } from 'lucide-react';
-const API_URL = import.meta.env.API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 export default function MainApp() {
@@ -163,7 +163,7 @@ function TasksPage() {
                 {tasks.length === 0 ? (
                     <p className="text-zinc-500">Задач пока нет.</p>
                 ) : (
-                    tasks.map((task) => (
+                    Array.isArray(tasks) && tasks.map((task) => (
                         <div key={task.id} className="p-5 rounded-xl border border-zinc-800 bg-[#141414] flex justify-between items-start">
                             <div className="space-y-3">
                                 <div className="flex items-center gap-3 flex-wrap">
