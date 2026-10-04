@@ -176,7 +176,7 @@ function TasksPage() {
                                 {task.fileUrl && task.fileUrl.length > 0 && (
                                     <div className="flex flex-wrap gap-2 pt-1">
                                         {task.fileUrl.map((url, idx) => (
-                                            <a key={idx} href={`${BACKEND_URL}${url}`} target="_blank" rel="noreferrer" download={task.fileName[idx]} className="inline-flex items-center gap-2 text-xs text-indigo-400 bg-indigo-950/40 px-3 py-1.5 rounded-lg border border-indigo-900/50">
+                                            <a key={idx} href={url} target="_blank" rel="noreferrer" download={task.fileName[idx]} className="inline-flex items-center gap-2 text-xs text-indigo-400 bg-indigo-950/40 px-3 py-1.5 rounded-lg border border-indigo-900/50">
                                                 <FileText size={14} /> {task.fileName[idx] || `Файл ${idx + 1}`}
                                             </a>
                                         ))}
