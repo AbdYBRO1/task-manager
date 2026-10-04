@@ -4,7 +4,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
-const { error } = require('console');
+
+import { upload, uploadFileToSupabase } from './services/storage.js';
 
 const prisma = new PrismaClient();
 const app = express();
@@ -12,7 +13,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('uploads'));
 
 
 const storage = multer.diskStorage({
@@ -47,14 +48,15 @@ app.post('/api/tasks', upload.array('files', 10), async (req, res) => {
     try {
         const { title, description, points, categoryId } = req.body;
 
-        let fileUrl = [];
-        let fileName = [];
+        const fileUrl = [];
+        const fileName = [];
 
         if (req.files && req.files.length > 0) {
-            req.files.forEach(file => {
-                fileUrl.push(`/uploads/${file.filename}`);
-                fileName.push(file.originalname);
-            })
+            for(const file of req.files) {
+                const uploaded = await uploadFileToSupabase(file);
+                fileUrl.push(uploaded.url);
+                fileName.push(uploaded.name);
+            }
         }
 
         const newTask = await prisma.task.create({

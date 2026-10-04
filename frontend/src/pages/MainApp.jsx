@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Routes, Route, Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { LogOut, Mail, Lock, Clock, RotateCcw, Play, Pause, FileText, User, Plus, FolderPlus, Layers } from 'lucide-react';
-const API_URL = 'https://task-manager-9vuv.onrender.com/api';
+const API_URL = import.meta.env.API_URL;
+const BACKEND_URL = API_URL.replace('/api', '');
 
 
 export default function MainApp() {
@@ -175,7 +176,7 @@ function TasksPage() {
                                 {task.fileUrl && task.fileUrl.length > 0 && (
                                     <div className="flex flex-wrap gap-2 pt-1">
                                         {task.fileUrl.map((url, idx) => (
-                                            <a key={idx} href={`http://localhost:5000${url}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-xs text-indigo-400 bg-indigo-950/40 px-3 py-1.5 rounded-lg border border-indigo-900/50">
+                                            <a key={idx} href={`${BACKEND_URL}${url}`} target="_blank" rel="noreferrer" download={task.fileName[idx]} className="inline-flex items-center gap-2 text-xs text-indigo-400 bg-indigo-950/40 px-3 py-1.5 rounded-lg border border-indigo-900/50">
                                                 <FileText size={14} /> {task.fileName[idx] || `Файл ${idx + 1}`}
                                             </a>
                                         ))}
